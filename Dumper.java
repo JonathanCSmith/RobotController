@@ -1,9 +1,18 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Unknown
+ * 
+ */
+
 package org.robotcommunicator;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+//UNUSED error catcher using reflection
 public class Dumper {
     private static Dumper instance = new Dumper();
 

@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import java.awt.event.ActionEvent;
@@ -26,6 +35,7 @@ public class ConnectionGUI implements ActionListener, WindowListener {
 	private JPanel contentPane;
 	private JList list;
 	
+	//Object instantiation
 	public ConnectionGUI(boolean type) {
 		this.portSelection = -1;
 		this.framePresent = false;
@@ -37,6 +47,7 @@ public class ConnectionGUI implements ActionListener, WindowListener {
 		return portSelection;
 	}
 	
+	//Builds a GUI that allows the user to select from all attached comm port or stepper motor devices
 	private void buildOlimexGUI(boolean type) {
 		Vector<String> ports;
 		if (type) {

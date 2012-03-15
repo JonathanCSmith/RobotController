@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import java.awt.Component;
@@ -15,6 +24,8 @@ public class RobotGUIListener implements ActionListener {
 		
 	}
 
+	//Action listeners for when the user interacts with the GUI
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Which button was pressed

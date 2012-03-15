@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import gnu.io.CommPortIdentifier;
@@ -23,11 +32,13 @@ public class OlimexCommunicator
 	private static boolean busy;
 	private static boolean debug = false;
 	
+	//Singleton constructer - ensures there is only one object
 	private OlimexCommunicator() {
 		OlimexCommunicator.connected = false;
 		OlimexCommunicator.busy = false;
 	}
 	
+	//Allows objects to reference this object instead of instantiate a new one
 	public static synchronized OlimexCommunicator link() {
 		if (instance == null) {
 			instance = new OlimexCommunicator();
@@ -35,10 +46,12 @@ public class OlimexCommunicator
 		return instance;
 	}
 
+	//Connect option if no other variables are given
 	public boolean connect(String portName) {
 		return connect(portName, 4800);
 	}
 	
+	//Connect protocol with debug catches
 	public boolean connect(String portName, int speed) {
 		CommPortIdentifier portID;
 		if (debug) {
@@ -46,6 +59,7 @@ public class OlimexCommunicator
 		}
 		boolean connected = false;
 		try {
+			//Try to connect to the given comm port
 			portID = CommPortIdentifier.getPortIdentifier(portName);
 			if (portID.isCurrentlyOwned()) {
 				if (debug) {
@@ -53,6 +67,7 @@ public class OlimexCommunicator
 				}
 				return connected;
 			} else {
+				//Setup the comm port - use preset settings for the robot
 				port = (SerialPort) portID.open("RobotController", 2000);
 				port.setSerialPortParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 				port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
@@ -99,6 +114,7 @@ public class OlimexCommunicator
 		
 	}
 
+	//Disconnect method, prevents port from hanging on the program's exit
 	public boolean disconnect() {
 		boolean disconnected = false;
 		try {
@@ -119,6 +135,7 @@ public class OlimexCommunicator
 		return disconnected = true;
 	}
 	
+	//Write using byte streams
 	public boolean write(String[] instructions) {
 		boolean sent = false;
 		
@@ -132,6 +149,7 @@ public class OlimexCommunicator
 				
 			} else {
 				try {
+					//Prefix and suffix are constant for this type of robot
 					busy = true;
 					byte[] prefix = "2".getBytes("ASCII");
 					byte[] suffix = "\r\n\r\n".getBytes("ASCII");
@@ -148,6 +166,7 @@ public class OlimexCommunicator
 						}
 					}
 
+					//Iteratively send bytes, without time delays the process hangs
 					for (int i = 0; i < instructions.length; i++) {
 						byte[] content = instructions[i].getBytes("ASCII");
 						
@@ -196,6 +215,8 @@ public class OlimexCommunicator
 		}
 	}
 
+	//Ensures that the data has finished writing before we start sending the next signal
+	// also ensures that the solenoid has finished
 	private boolean waitForData() {
 		
 		boolean success = false;
@@ -226,59 +247,9 @@ public class OlimexCommunicator
 		}
 		
 		return success;
-		
-//		boolean success = false;
-//		boolean loop = true;
-//		String read = null;
-//		do {
-//			if (SerialReader.dataAvailable) {
-//				if (read == null) {
-//					read = SerialReader.getData();
-//				} else {
-//					read = read + SerialReader.getData();
-//				}
-//				if (read.equals(" \r \n1READY")) {
-//					loop = false;
-//					success = true;
-//					SerialReader.setDataAvailable(false);
-//					SerialReader.resetData();
-//				} else {
-//					try {
-//						Thread.sleep(100);
-//					} catch (InterruptedException e) {
-//						
-//					}
-//				}
-//			} else {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {
-//					
-//				}
-//			}
-//		} while (loop);
-//		
-//		boolean success = false;
-//		boolean loop = true;
-//		
-//		do {
-//			if (SerialReader.instructionsRecieved) {
-//				SerialReader.instructionsRecieved = false;
-//				success = true;
-//				loop = false;
-//				System.out.println("The ready signal was recieved");
-//			} else {
-//				try {
-//					Thread.sleep(100);
-//				} catch (InterruptedException e) {
-//					
-//				}
-//			}
-//		} while (loop);
-//		
-//		return success;
 	}
 	
+	//Methods for checking status
 	public boolean isConnected() {
 		return connected;
 	}

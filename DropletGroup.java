@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import java.awt.Component;
@@ -74,6 +83,7 @@ public class DropletGroup {
 
 	}
 	
+	//Function to generate a paneled representation of the last droplet group created (i.e. location, number, size and frequency)
 	private void addPanel(String text1, String text2, String text3, int jcb) {
 		// Main Container
 		this.panel = new JPanel();
@@ -169,6 +179,7 @@ public class DropletGroup {
 		
 	}
 	
+	//Removes the panel
 	static public void removePanel(JPanel p) {
 		DropletGroup.parent.remove(p);
 		DropletGroup.parent.setPreferredSize(new Dimension(400,DropletGroup.parent.getHeight() - 100));

@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import gnu.io.CommPortIdentifier;
@@ -19,6 +28,7 @@ public class RobotHandler {
 	private static Vector<String> portsList;
 	private static Vector<String> deviceList;
 
+	//Instantiate
 	private RobotHandler() {
 		RobotHandler.baudRate = 4800;
 		RobotHandler.connected = false;
@@ -27,6 +37,7 @@ public class RobotHandler {
 		RobotHandler.deviceList = null;
 	}
 	
+	//Generate the robot communication modules
 	public static void inialize() {
 		if (fake) {
 			if (debug) {
@@ -43,6 +54,7 @@ public class RobotHandler {
 		}
 	}
 
+	//Ensure that there is only ever one RobotHandler object
 	public static synchronized RobotHandler link() {
 		if (instance == null) {
 			instance = new RobotHandler();
@@ -50,6 +62,7 @@ public class RobotHandler {
 		return instance;
 	}
 
+	//Connect to the select devices and run a handshake test
 	public boolean connect() {
 		boolean status = false;
 		boolean olimexStatus = false;
@@ -146,6 +159,7 @@ public class RobotHandler {
 		return status;
 	}
 
+	//Disconnect from all devices
 	public boolean disconnect() {
 		boolean status = false;
 		
@@ -160,6 +174,7 @@ public class RobotHandler {
 		return status;
 	}
 
+	//Write to the robot
 	public boolean write(String[] instructions) {
 		boolean status = false;
 		RobotHandler.busy = true;
@@ -241,7 +256,6 @@ public class RobotHandler {
 			}
 		}
 		
-		
 		//Return
 		if (!fake) {
 			phidget.setTargetLocation(0);
@@ -257,6 +271,7 @@ public class RobotHandler {
 		return status;
 	}
 	
+	//Handshake test parameters
 	private boolean handshake() {
 		boolean status = false;
 		
@@ -269,6 +284,7 @@ public class RobotHandler {
 		
 	}
 	
+	//Ensure there is only ever one ports list (reduce concurency issues)
 	public static Vector<String> getPortsList() {
 		if (portsList == null) {
 			portsList = generatePortsList();
@@ -276,6 +292,7 @@ public class RobotHandler {
 		return portsList;
 	}
 
+	//Find all ports, get their properties and build a vector out of them
 	@SuppressWarnings("unchecked")
 	private static Vector<String> generatePortsList() {
 		if (!fake) {
@@ -304,6 +321,7 @@ public class RobotHandler {
 		}
 	}
 
+	//Ensure there is only ever one device list (reduce concurency issues)
 	public static Vector<String> getDevicesList() {
 		if (deviceList == null) {
 			deviceList = generateDevicesList();
@@ -315,6 +333,7 @@ public class RobotHandler {
 		RobotHandler.debug = b;
 	}
 	
+	//Find all devices, get their properties and build a vector out of them
 	private static Vector<String> generateDevicesList() {
 		if (!fake) {
 			Vector<String> deviceList = phidget.listDevices();

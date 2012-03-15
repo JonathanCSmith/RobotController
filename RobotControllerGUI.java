@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import java.awt.Color;
@@ -51,16 +60,6 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		} else {
 			(new Thread(new RobotControllerGUI())).start();
 		}
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					RobotControllerGUI window = new RobotControllerGUI();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 	}
 
 	/**
@@ -349,6 +348,7 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		frame.getContentPane().setLayout(groupLayout);
 	}
 	
+	//Change the look depending on whether the robot is busy or not
 	public void updateStatus(boolean status) {
 		
 		btnRun.setEnabled(status);
@@ -366,6 +366,7 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		
 	}
 
+	//Convert the droplet group panels into interpretable information
 	private String[][] getDropletSequence() {
 		Component[] components = displayPanel.getComponents();
 		String[][] instructions = new String[components.length][4];
@@ -410,6 +411,7 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		return instructions;
 	}
 
+	//Main thread function, waits until user says go, excecutes and then resumes waiting
 	@Override
 	public void run() {
 		try {
@@ -449,6 +451,7 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		}
 	}
 
+	//Status methods
 	public void setIndicatorColor(Color c) {
 		indicator.setBackground(c);
 	}
@@ -461,6 +464,7 @@ public class RobotControllerGUI implements Runnable, WindowListener{
 		return connection;
 	}
 
+	//Window listeners for better shutdown
 	@Override
 	public void windowClosed(WindowEvent e) {
 		System.out.println("The close window event has been called");
