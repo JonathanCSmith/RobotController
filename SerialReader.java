@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import gnu.io.SerialPortEvent;
@@ -17,13 +26,14 @@ public class SerialReader implements SerialPortEventListener
     public static boolean instructionsRecieved;
     public static String stringStore;
     
-    
+    //Initialise
     public SerialReader ( BufferedInputStream in ) {
         this.in = in;
         SerialReader.instructionsRecieved = false;
         SerialReader.stringStore = null;
     }
     
+    //Status mehtods
     public static void setDataAvailable(boolean set) {
     	SerialReader.instructionsRecieved = set;
     }
@@ -36,6 +46,7 @@ public class SerialReader implements SerialPortEventListener
     	SerialReader.stringStore = null;
     }
     
+    //Upon serial event, record the data within this object
     public void serialEvent(SerialPortEvent arg0) {
     	
     	try {

@@ -1,3 +1,12 @@
+/*
+ * This script is a part of the robot controller package. To run, you must have the phidget
+ * libraries already installed on your computer
+ * 
+ * Author: Jonathan Smith, Imperial College London
+ * 
+ * Liscence: LGPL
+ */
+
 package org.robotcommunicator;
 
 import java.util.Vector;
@@ -17,11 +26,14 @@ public class PhidgetCommunicator {
 	public static boolean busy;
 	private static boolean debug = false;
 	public static int motorNumber;
+	
+	//Values represent locations of the sample wells
 	private static final long[] locations = {0,192,400,592,800,992,1200,1392,1600,1792,2000,2192,2400,2592,2800,2992};
 	
 	StepperPositionChangeListener stepperListener;
 	ErrorListener errorListener;
 	
+	//Singleton constructor - ensures there is only one object
 	private PhidgetCommunicator() {
 		try {
 			stepper = new StepperPhidget();
@@ -33,6 +45,7 @@ public class PhidgetCommunicator {
 		}
 	}
 	
+	//Allows objects to reference this object instead of instantiate a new one
 	public static synchronized PhidgetCommunicator link() {
 		if (instance == null) {
 			instance = new PhidgetCommunicator();
@@ -41,6 +54,7 @@ public class PhidgetCommunicator {
 		return instance;
 	}
 	
+	//Generate a list of the attached devices
 	public Vector<String> listDevices() {
 		Vector<String> deviceList;
 		try {
@@ -59,6 +73,7 @@ public class PhidgetCommunicator {
 		return deviceList;
 	}
 	
+	//Connect protocol
 	public boolean connect(int n) {
 		boolean connected = false;
 		PhidgetCommunicator.motorNumber = n;
@@ -96,6 +111,8 @@ public class PhidgetCommunicator {
 		return connected;
 	}
 	
+	
+	//Disconnect protocol, ensures that the device doesn't remain locked
 	public void disconnect() {
 		System.out.println("disconnect entered");
 		try {
@@ -113,6 +130,7 @@ public class PhidgetCommunicator {
 		}
 	}
 	
+	//Test to see if it is setup correctly
 	public boolean handshake() {
 		boolean success = false;
 		if (busy) {
@@ -145,6 +163,7 @@ public class PhidgetCommunicator {
 		}
 	}
 	
+	//Waits until the stepper motor has arrived at the target location
 	public boolean waitForData(int loc) {
 		
 		long target = locations[loc];
@@ -172,6 +191,7 @@ public class PhidgetCommunicator {
 		return success;
 	}
 	
+	//Sets the target location for the stepper motor
 	public void setTargetLocation(int l){
 		long loc = locations[l];
 		try {
@@ -184,6 +204,7 @@ public class PhidgetCommunicator {
 		}
 	}
 	
+	//Gets the current location for the stepper motor
 	private long getLocation(){
 		try {
 			return stepper.getCurrentPosition(motorNumber);
@@ -196,6 +217,7 @@ public class PhidgetCommunicator {
 		}
 	}
 	
+	//Gets the sample number
 	public int getIndexLocation() {
 		long l = getLocation();
 		int loc = -1;
